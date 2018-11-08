@@ -12,17 +12,17 @@
               :unique-opened="true"
               text-color="#fff"
               active-text-color="#ffd04b">
-              <el-submenu :index="item.funcode" v-for="item in rootInfo" :key="item.pk_resource" v-if="item.children">
+              <el-submenu :index="item.code" v-for="item in rootInfo" :key="item.pk_resource" v-if="item.children">
                 <template slot="title">
-                  <i :class="item.resicon" class="fa-fw"></i>
-                  <span>{{item.funname}}</span>
+                  <i :class="item.icon" class="fa-fw"></i>
+                  <span>{{item.name}}</span>
                 </template>
                 <sub-menu :item="subItem" v-for="subItem in item.children" :key="subItem.pk_resource"></sub-menu>
               </el-submenu>
-              <el-menu-item :index="item.funcode" :route="'/manager' + item.urls" v-else>
+              <el-menu-item :index="item.code" :route="'/manager' + item.url" v-else>
                 <template slot="title">
-                  <i :class="item.resicon" class="fa-fw"></i>
-                  <span>{{item.funname}}</span>
+                  <i :class="item.icon" class="fa-fw"></i>
+                  <span>{{item.name}}</span>
                 </template>
               </el-menu-item>
             </el-menu>
@@ -56,10 +56,10 @@ export default {
   methods: {
     queryPermissionTree () {
       const vm = this
-      axios.post('/gcbin/permission/queryPermissionTree', {groupCode: vm.userInfo.group_code}).then((response) => {
+      axios.post('/permission/queryPermissionTree', {groupCode: vm.userInfo.groupCode}).then((response) => {
         vm.menuInfo = response.data.data
         vm.menuInfo.forEach((item, index) => {
-          if (item.pk_parent === 0) {
+          if (item.pk_parent === '0') {
             vm.addChildren(item)
             vm.rootInfo.push(item)
           }
