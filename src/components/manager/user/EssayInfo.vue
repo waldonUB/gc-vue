@@ -16,7 +16,7 @@ export default {
     const vm = this
     vm.essay = JSON.parse(vm.$route.params.essay)
     const contentDetail = document.getElementById('contentDetail')
-    contentDetail.innerHTML = vm.essay.blog_content
+    contentDetail.innerHTML = vm.essay.blogContent
   }
 }
 </script>

@@ -6,24 +6,24 @@
           <div slot="header">
             <el-row>
               <el-col :span="1">
-                <img style="width: 40px;height: 40px" :src="essay.head_img">
+                <img style="width: 40px;height: 40px" :src="essay.headImg">
               </el-col>
               <el-col :span="2" style="margin-top: 11px;">
-                <el-tag size="small" type="info">{{essay.user_name}}</el-tag>
+                <el-tag size="small" type="info">{{essay.userName}}</el-tag>
               </el-col>
               <el-col :span="12" style="margin-top: 9px;font-size: 20px;font-weight: bolder">
-                <span @click="getDetail(essay)" style="cursor: pointer">{{essay.blog_title}}</span>
-                <i @click="praise(essay.pk_blog, index)" v-if="essay.is_praised === 1" class="fa fa-fw fa-star" style="color: darkred;cursor: pointer; font-size: 16px"></i>
+                <span @click="getDetail(essay)" style="cursor: pointer">{{essay.blogTitle}}</span>
+                <i @click="praise(essay.pk_blog, index)" v-if="essay.isPraised === 1" class="fa fa-fw fa-star" style="color: darkred;cursor: pointer; font-size: 16px"></i>
                 <i @click="praise(essay.pk_blog, index)" v-else class="fa fa-fw fa-star-o" style="color: darkgray;cursor: pointer; font-size: 16px"></i>
               </el-col>
               <el-col class="pull-right" :span="1" style="margin-top: 11px;">
-                <i v-if="essay.praise_num >= 3" class="fa fa-fw fa-free-code-camp" style="color: orangered;font-size: 20px"></i>
+                <i v-if="essay.praiseNum >= 3" class="fa fa-fw fa-free-code-camp" style="color: orangered;font-size: 20px"></i>
               </el-col>
               <el-col :span="2" class="pull-right" style="margin-top: 15px;color: #8590A6">
-                {{essay.last_time? essay.last_time.slice(0, 10) : ''}}
+                {{essay.creationTime? essay.creationTime.slice(0, 10) : ''}}
               </el-col>
               <el-col :span="3" class="pull-right" style="margin-top: 11px;color: #8590A6">
-                <el-tag size="medium" type="info">{{essay.blog_classify}}</el-tag>
+                <el-tag size="medium" type="info">{{essay.blogClassify}}</el-tag>
               </el-col>
             </el-row>
           </div>
@@ -31,25 +31,25 @@
           <el-collapse v-model="activeNames" @change="getComments(essay.pk_blog)" style="margin-top: 20px;">
             <el-collapse-item :name="essay.pk_blog">
               <template slot="title">
-                <el-tag size="small" type="warning">{{essay.praise_num}} 人赞了该话题</el-tag>
-                <el-tag size="small" type="success">{{essay.comment_num}} 条评论</el-tag>
+                <el-tag size="small" type="warning">{{essay.praiseNum}} 人赞了该话题</el-tag>
+                <el-tag size="small" type="success">{{essay.commentNum}} 条评论</el-tag>
               </template>
               <el-row v-for="item in commentInfo" :key="item.pk_comment" v-loading>
                 <el-col :span="24">
                   <el-row>
                     <el-col :span="1">
-                      <img style="width: 35px;height: 35px" :src="item.head_img">
+                      <img style="width: 35px;height: 35px" :src="item.headImg">
                     </el-col>
                     <el-col :span="1" style="margin-top: 11px;">
-                      <el-tag size="mini" type="info">{{item.user_name}}</el-tag>
+                      <el-tag size="mini" type="info">{{item.userName}}</el-tag>
                     </el-col>
                     <el-col :span="2" class="pull-right">
-                      <span style="color: #8590A6">{{item.cm_time}}</span>
+                      <span style="color: #8590A6">{{item.cmTime === '刚刚' ? '刚刚' : item.cmTime.slice(0, 10)}}</span>
                     </el-col>
                   </el-row>
                 </el-col>
                 <el-col :span="24" style="font-size: 16px;margin-left: 10px">
-                  {{item.cm_content}}
+                  {{item.cmContent}}
                 </el-col>
               </el-row>
               <el-row>
@@ -90,7 +90,7 @@ export default {
       const vm = this
       vm.$set(vm, 'commentContent', null)
       vm.$set(vm, 'commentInfo', []) // 预先清空
-      axois.post('/gcbin/query_comment', {pk_blog: pkBlog}).then((response) => {
+      axois.post('/essay/getComments', {pk_blog: pkBlog}).then((response) => {
         if (vm.currentBlog && vm.currentBlog === pkBlog) { // 再次点击关闭
           vm.activeNames = []
           vm.currentBlog = null
@@ -113,7 +113,7 @@ export default {
         target: document.querySelector('.essays')
       })
       const promise = new Promise((resolve, reject) => {
-        axois.post('/gcbin/query_blog', {user_name: vm.userInfo.user_name}).then((response) => {
+        axois.post('/essay/getEssays', {userName: vm.userInfo.userName}).then((response) => {
           vm.essays = response.data.data
           resolve(vm.essays)
         })
@@ -121,7 +121,7 @@ export default {
       promise.then((essays) => {
         essays.map((item) => {
           const pkBlog = document.getElementById(item.pk_blog)
-          pkBlog.innerHTML = item.blog_content
+          pkBlog.innerHTML = item.blogContent
         })
         loading.close()
       })
@@ -131,13 +131,13 @@ export default {
      * */
     praise (pkBlog, index) {
       const vm = this
-      axois.post('/gcbin/save_praise', {user_name: vm.userInfo.user_name, pk_blog: pkBlog}).then((response) => {
+      axois.post('/essay/savePraise', {userName: vm.userInfo.userName, pk_blog: pkBlog}).then((response) => {
         if (response.data.success) {
-          vm.$set(vm.essays[index], 'is_praised', 1)
-          vm.$set(vm.essays[index], 'praise_num', vm.essays[index].praise_num + 1)
+          vm.$set(vm.essays[index], 'isPraised', 1)
+          vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum + 1)
         } else {
           vm.$set(vm.essays[index], 'is_praised', 0)
-          vm.$set(vm.essays[index], 'praise_num', vm.essays[index].praise_num - 1)
+          vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum - 1)
         }
       })
     },
@@ -145,15 +145,16 @@ export default {
       const vm = this
       const commentInfo = {
         pk_blog: pkBlog,
-        cm_content: vm.commentContent,
-        head_img: vm.userInfo.head_img,
-        user_name: vm.userInfo.user_name,
-        cm_time: new Date().toLocaleDateString().replace(/\//g, '-')
+        cmContent: vm.commentContent,
+        headImg: vm.userInfo.headImg,
+        userName: vm.userInfo.userName,
+        cmTime: null
       }
-      axois.post('/gcbin/save_comment', commentInfo).then(() => {
+      axois.post('/essay/saveComment', commentInfo).then(() => {
         vm.$set(vm, 'commentContent', null)
+        commentInfo.cmTime = '刚刚'
         vm.commentInfo.push(commentInfo)
-        vm.$set(vm.essays[index], 'comment_num', vm.essays[index].comment_num + 1)
+        vm.$set(vm.essays[index], 'commentNum', vm.essays[index].commentNum + 1)
       })
     },
     getDetail (essay) {

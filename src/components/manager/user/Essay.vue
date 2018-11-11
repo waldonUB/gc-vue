@@ -88,15 +88,16 @@ export default {
     saveEssay () {
       const vm = this
       const data = {
-        blog_title: vm.essayTitle,
-        blog_content: vm.editorHtml,
-        blog_classify: vm.essayClassify,
-        cuserid: vm.userInfo.cuserid,
-        user_name: vm.userInfo.user_name,
-        head_img: vm.userInfo.head_img
+        blogTitle: vm.essayTitle,
+        blogContent: vm.editorHtml,
+        blogClassify: vm.essayClassify,
+        userId: vm.userInfo.userId,
+        userName: vm.userInfo.userName,
+        headImg: vm.userInfo.headImg
       }
-      axios.post('/gcbin/save_question', data).then((response) => {
+      axios.post('/essay/saveEssay', data).then((response) => {
         if (response.data.success) {
+          this.$router.push({path: 'InfoCenter'})
           vm.$notify({
             title: '操作提示',
             message: `发布成功`,
