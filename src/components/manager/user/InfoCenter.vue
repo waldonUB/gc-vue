@@ -20,7 +20,7 @@
                 <i v-if="essay.praiseNum >= 3" class="fa fa-fw fa-free-code-camp" style="color: orangered;font-size: 20px"></i>
               </el-col>
               <el-col :span="2" class="pull-right" style="margin-top: 15px;color: #8590A6">
-                {{essay.creationTime? essay.creationTime.slice(0, 10) : ''}}
+                {{essay.creationTime? new Date(essay.creationTime).toLocaleDateString() : ''}}
               </el-col>
               <el-col :span="3" class="pull-right" style="margin-top: 11px;color: #8590A6">
                 <el-tag size="medium" type="info">{{essay.blogClassify}}</el-tag>
