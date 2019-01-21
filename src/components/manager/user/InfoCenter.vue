@@ -1,6 +1,10 @@
 <template>
   <el-container class="essays">
-    <el-row>
+    <el-popover placement="top-start" width="300" trigger="click">
+      <el-input size="mini" v-model="titleKey"></el-input>
+      <el-button slot="reference" type="success" class="return-btn">搜索攻略</el-button>
+    </el-popover>
+    <el-row v-if="essays.length > 0">
       <el-col v-for="(essay, index) in essays" :key="essay.pk_blog" :span="24">
         <el-card shadow="hover" :body-style="cardStyle">
           <div slot="header">
@@ -13,10 +17,10 @@
               </el-col>
               <el-col :span="12" style="margin-top: 9px;font-size: 20px;font-weight: bolder">
                 <span @click="getDetail(essay)" style="cursor: pointer">{{essay.blogTitle}}</span>
-                <i @click="praise(essay.pk_blog, index)" v-if="essay.isPraised === 1" class="fa fa-fw fa-star" style="color: darkred;cursor: pointer; font-size: 16px"></i>
-                <i @click="praise(essay.pk_blog, index)" v-else class="fa fa-fw fa-star-o" style="color: darkgray;cursor: pointer; font-size: 16px"></i>
               </el-col>
               <el-col class="pull-right" :span="1" style="margin-top: 11px;">
+                <i @click="praise(essay.pk_blog, index)" v-if="essay.isPraised === 1" class="fa fa-fw fa-thumbs-up" style="color: darkred;cursor: pointer; font-size: 16px"></i>
+                <i @click="praise(essay.pk_blog, index)" v-else class="fa fa-fw fa-thumbs-o-up" style="color: darkgray;cursor: pointer; font-size: 16px"></i>
                 <i v-if="essay.praiseNum >= 3" class="fa fa-fw fa-free-code-camp" style="color: orangered;font-size: 20px"></i>
               </el-col>
               <el-col :span="2" class="pull-right" style="margin-top: 15px;color: #8590A6">
@@ -62,6 +66,12 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row style="text-align: center" v-else>
+      <img src="@/assets/black_man.jpeg">
+      <el-row style="font-size: xx-large">
+        你要找啥???
+      </el-row>
+    </el-row>
   </el-container>
 </template>
 
@@ -79,7 +89,13 @@ export default {
       userInfo: [],
       currentBlog: null,
       activeNames: [],
-      commentContent: null
+      commentContent: null,
+      titleKey: '' // 标题关键字搜索
+    }
+  },
+  watch: {
+    titleKey () {
+      this.getEssays()
     }
   },
   methods: {
@@ -113,7 +129,7 @@ export default {
         target: document.querySelector('.essays')
       })
       const promise = new Promise((resolve, reject) => {
-        axois.post('/essay/getEssays', {userName: vm.userInfo.userName}).then((response) => {
+        axois.post('/essay/getEssays', {userName: vm.userInfo.userName, blogTitle: vm.titleKey}).then((response) => {
           vm.essays = response.data.data
           resolve(vm.essays)
         })
@@ -131,15 +147,21 @@ export default {
      * */
     praise (pkBlog, index) {
       const vm = this
-      axois.post('/essay/savePraise', {userName: vm.userInfo.userName, pk_blog: pkBlog}).then((response) => {
-        if (response.data.success) {
-          vm.$set(vm.essays[index], 'isPraised', 1)
-          vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum + 1)
-        } else {
-          vm.$set(vm.essays[index], 'is_praised', 0)
-          vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum - 1)
-        }
-      })
+      if (vm.essays[index].isPraised === 0) {
+        axois.post('/essay/savePraise', {userName: vm.userInfo.userName, pk_blog: pkBlog}).then((response) => {
+          if (response.data.success) {
+            vm.$set(vm.essays[index], 'isPraised', 1)
+            vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum + 1)
+          }
+        })
+      } else {
+        axois.post('/essay/deletePraise', {userName: vm.userInfo.userName, pk_blog: pkBlog}).then((response) => {
+          if (response.data.success) {
+            vm.$set(vm.essays[index], 'isPraised', 0)
+            vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum - 1)
+          }
+        })
+      }
     },
     saveComment (pkBlog, index) {
       const vm = this

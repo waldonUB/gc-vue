@@ -59,7 +59,7 @@ export default {
       axios.post('/permission/queryPermissionTree', {groupCode: vm.userInfo.groupCode}).then((response) => {
         vm.menuInfo = response.data.data
         vm.menuInfo.forEach((item, index) => {
-          if (item.pk_parent === '0') {
+          if (item.pk_parent === 0) {
             vm.addChildren(item)
             vm.rootInfo.push(item)
           }
@@ -92,14 +92,15 @@ export default {
   .el-menu {
     background-color: rgba(255, 255, 255, 0);
   }
+
   .el-header, .el-footer {
-    background-color: rgba(26, 34, 38, 0.95);
+    background-color: rgba(26, 34, 38, 1);
     color: #F6F6F6;
     line-height: 60px;
   }
 
   .el-aside {
-    background-color: #222D32;
+    background-color: rgba(26, 34, 38, 1);
     color: #333;
   }
 
@@ -109,8 +110,9 @@ export default {
     padding: unset;
   }
 
-  body > .el-container {
-    margin-bottom: 40px;
+  .el-container {
+    height: 100%;
+    bottom: 0;
   }
 
   .el-container:nth-child(5) .el-aside,

@@ -1,5 +1,5 @@
 <template>
-  <div id="BMapContainer" style="width: 100%; height: 500px"></div>
+  <div id="BMapContainer" style="width: 100%; min-height: 818px"></div>
 </template>
 
 <script>

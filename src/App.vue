@@ -22,6 +22,12 @@ export default {
     background-color: rgba(255, 255, 255, 0) !important;
     color: white !important;
   }
+  /*1.去除谷歌屎黄色背景*/
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill{
+    -webkit-box-shadow: 0 0 0 1000px white inset;
+  }
   .trans-dialog > .el-dialog{
     background-color: rgba(46, 64, 84, 0.3) !important;
   }
@@ -38,5 +44,12 @@ export default {
   #app {
     height: 100%;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+  }
+  /*底端固定按钮*/
+  .return-btn{
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    z-index: 1000;
   }
 </style>

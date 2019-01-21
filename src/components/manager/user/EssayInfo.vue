@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button type="success" class="return-btn" @click="returnUpOne">返回</el-button>
     <div id="contentDetail"></div>
   </div>
 </template>
@@ -10,6 +11,11 @@ export default {
   data () {
     return {
       essay: null
+    }
+  },
+  methods: {
+    returnUpOne () {
+      this.$router.go(-1)
     }
   },
   mounted () {

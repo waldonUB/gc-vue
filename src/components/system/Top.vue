@@ -103,7 +103,6 @@ export default {
   },
   methods: {
     modifyHead (file) {
-      debugger
       const vm = this
       const windowURL = window.URL || window.webkitURL
       const dataURL = windowURL.createObjectURL(file.file)
