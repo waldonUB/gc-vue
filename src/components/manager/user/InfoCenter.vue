@@ -27,7 +27,10 @@
                 {{essay.creationTime? new Date(essay.creationTime).toLocaleDateString() : ''}}
               </el-col>
               <el-col :span="3" class="pull-right" style="margin-top: 11px;color: #8590A6">
-                <el-tag size="medium" type="info">{{essay.blogClassify}}</el-tag>
+                <el-tag size="medium" type="info">分类:{{essay.blogClassify}}</el-tag>
+              </el-col>
+              <el-col :span="2" class="pull-right" style="margin-top: 11px;color: #8590A6">
+                <el-button :disabled="essay.userName !== userInfo.userName" type="danger" size="mini" @click="deleteEssay(essay.pk_blog)">删除攻略</el-button>
               </el-col>
             </el-row>
           </div>
@@ -152,6 +155,11 @@ export default {
           if (response.data.success) {
             vm.$set(vm.essays[index], 'isPraised', 1)
             vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum + 1)
+            vm.$notify({
+              type: 'success',
+              title: '点赞成功',
+              message: '此攻略当前点赞数为' + vm.essays[index].praiseNum
+            })
           }
         })
       } else {
@@ -159,6 +167,11 @@ export default {
           if (response.data.success) {
             vm.$set(vm.essays[index], 'isPraised', 0)
             vm.$set(vm.essays[index], 'praiseNum', vm.essays[index].praiseNum - 1)
+            vm.$notify({
+              type: 'info',
+              title: '取消点赞',
+              message: '此攻略当前点赞数为' + vm.essays[index].praiseNum
+            })
           }
         })
       }
@@ -179,8 +192,37 @@ export default {
         vm.$set(vm.essays[index], 'commentNum', vm.essays[index].commentNum + 1)
       })
     },
+    /**
+     * 查看文章详情
+     * */
     getDetail (essay) {
       this.$router.push({name: 'EssayInfo', params: { essay: JSON.stringify(essay) }})
+    },
+    /**
+     * 删除文章
+     * */
+    deleteEssay (pkBlog) {
+      this.$confirm(`是否删除该攻略？`, `提示`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axois.post('/essay/deleteEssay?pkBlog=' + pkBlog).then(response => {
+          if (response.data.success) {
+            this.$notify({
+              type: 'success',
+              title: '删除攻略成功'
+            })
+            this.getEssays()
+          } else {
+            this.$notify({
+              type: 'danger',
+              title: '删除失败'
+            })
+            console.log(response)
+          }
+        })
+      }).catch(() => {})
     }
   },
   mounted () {
