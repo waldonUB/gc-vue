@@ -19,7 +19,7 @@ module.exports = {
       '/api': {
         target: 'http://localhost:8080', // 代理服务器路径
         pathRewrite: {
-          '^/api': '/' // 重写路径
+          '^/api': '/gc' // 重写路径
         },
         changeOrigin: true // 是否跨域
       }
