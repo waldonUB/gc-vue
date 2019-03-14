@@ -85,7 +85,7 @@ export default {
     return {
       headImg: null,
       userName: null,
-      acceptType: '.jpeg,.gif,.png,.jpg,.bmp',
+      acceptType: '.jpg,.jpeg,.gif,.png,.jpg,.bmp',
       dialogFormVisible: false,
       ruleForm: {
         pass: null,
