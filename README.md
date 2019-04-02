@@ -1,27 +1,6 @@
 # gc-vue
+## 一个基于bpmn2.0实现activity流程的前端设计器的demo
 
-> A Vue.js project
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### 本次更新
+1.增加流程设计器的节点 <br/>
+2.引入color模块，更改了流程的颜色

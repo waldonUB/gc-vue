@@ -52,4 +52,24 @@ export default {
     bottom: 40px;
     z-index: 1000;
   }
+  .containers{
+    position: absolute;
+    background-color: #ffffff;
+    width: 90%;
+    height: 100%;
+  }
+  .canvas{
+    width: 100%;
+    height: 100%;
+  }
+  .panel{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .highlight-overlay {
+    background-color: green;
+    pointer-events: none; /* no pointer events, allows clicking through onto the element */
+    /*border-radius: 50px;*/
+  }
 </style>
