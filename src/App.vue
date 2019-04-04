@@ -53,23 +53,24 @@ export default {
     z-index: 1000;
   }
   .containers{
-    position: absolute;
-    background-color: #ffffff;
-    width: 90%;
-    height: 100%;
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.95);
+    /*未指定高度或高度为auto时占满整个纵向*/
+    align-items: stretch;
   }
   .canvas{
     width: 100%;
-    height: 100%;
+    height: auto;
   }
   .panel{
-    position: absolute;
-    right: 0;
-    top: 0;
+    /*height: auto;*/
+    min-height: 800px;
   }
   .highlight-overlay {
     background-color: green;
     pointer-events: none; /* no pointer events, allows clicking through onto the element */
+    opacity: 0.4;
+    z-index: -1000;
     /*border-radius: 50px;*/
   }
 </style>

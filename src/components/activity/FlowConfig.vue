@@ -1,6 +1,12 @@
 <template>
   <div class="containers" ref="content">
-    <div class="canvas" ref="canvas"></div>
+    <div class="canvas" ref="canvas">
+      <div class="group">
+        <el-button size="medium" type="primary" @click="apply">申请</el-button>
+        <el-button size="medium" type="warning" @click="audit">审核</el-button>
+        <el-button size="medium" type="success">付款</el-button>
+      </div>
+    </div>
     <div id="js-properties-panel" class="panel"></div>
   </div>
 </template>
@@ -15,23 +21,31 @@ import $ from 'jquery'
 
 export default {
   name: 'FlowConfig',
+  data () {
+    return {
+      bpmnModeler: null,
+      overlays: null,
+      elementRegistry: null,
+      isAudited: 0
+    }
+  },
   methods: {
     createNewDiagram (bpmnModeler) {
       const bpmnXmlStr = '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0fppxr8" targetNamespace="http://bpmn.io/schema/bpmn">\n' +
         '  <bpmn:process id="Process_1" isExecutable="false">\n' +
-        '    <bpmn:startEvent id="StartEvent_1" name="begin&#10;" magic:spell="WOOO ZAAAA">\n' +
+        '    <bpmn:startEvent id="StartEvent_1" name="填写报销申请" magic:spell="WOOO ZAAAA">\n' +
         '      <bpmn:outgoing>SequenceFlow_0nrfbee</bpmn:outgoing>\n' +
         '    </bpmn:startEvent>\n' +
-        '    <bpmn:task id="Task_0ho18x0" name="hello&#10;">\n' +
+        '    <bpmn:task id="Task_0ho18x0" name="主管审核">\n' +
         '      <bpmn:incoming>SequenceFlow_0nrfbee</bpmn:incoming>\n' +
         '      <bpmn:outgoing>SequenceFlow_00ho26x</bpmn:outgoing>\n' +
         '    </bpmn:task>\n' +
-        '    <bpmn:task id="Task_1ymuvem" name="world">\n' +
+        '    <bpmn:task id="Task_1ymuvem" name="总监审核">\n' +
         '      <bpmn:incoming>SequenceFlow_00ho26x</bpmn:incoming>\n' +
         '      <bpmn:outgoing>SequenceFlow_18df8vb</bpmn:outgoing>\n' +
         '    </bpmn:task>\n' +
-        '    <bpmn:endEvent id="EndEvent_1c0ed2n" name="end">\n' +
+        '    <bpmn:endEvent id="EndEvent_1c0ed2n" name="出纳付款">\n' +
         '      <bpmn:incoming>SequenceFlow_18df8vb</bpmn:incoming>\n' +
         '    </bpmn:endEvent>\n' +
         '    <bpmn:sequenceFlow id="SequenceFlow_0nrfbee" sourceRef="StartEvent_1" targetRef="Task_0ho18x0" />\n' +
@@ -81,21 +95,6 @@ export default {
         '</bpmn:definitions>\n'
       // 将字符串转换成图显示出来
       this.bpmnModeler.importXML(bpmnXmlStr, function (err) {
-        debugger
-        const overlays = bpmnModeler.get('overlays')
-        const elementRegistry = bpmnModeler.get('elementRegistry')
-        const shape = elementRegistry.get('StartEvent_1')
-        const $overlayHtml = $('<div class="highlight-overlay">')
-          .css({width: shape.width, height: shape.height, border: shape.border, 'border-radius': '50px'})
-        overlays.add('StartEvent_1', { // 这里应该可以等添加事件的时候再触发
-          position: {
-            top: 0,
-            left: 0
-          },
-          html: $overlayHtml
-        })
-        console.log(overlays)
-        console.log(shape)
         if (err) {
           console.error(err)
         } else {
@@ -103,7 +102,7 @@ export default {
           // that.success()
         }
       })
-    }
+    },
     // MagicPropertiesProvider (eventBus, bpmnFactory, elementRegistry) {
     //   this.getTabs = function (element) {
     //     // The "magic" tab
@@ -119,6 +118,49 @@ export default {
     //     ]
     //   }
     // }
+    /**
+     * 申请
+     * */
+    apply () {
+      this.overlays = this.bpmnModeler.get('overlays')
+      this.elementRegistry = this.bpmnModeler.get('elementRegistry')
+      const shape = this.elementRegistry.get('StartEvent_1')
+      const $overlayHtml = $('<div class="highlight-overlay">')
+        .css({width: shape.width, height: shape.height, 'border-radius': '50px'})
+      this.overlays.add('StartEvent_1', { // 这里应该可以等添加事件的时候再触发
+        position: {
+          top: 0,
+          left: 0
+        },
+        html: $overlayHtml
+      })
+    },
+    audit () {
+      debugger
+      let id = null
+      let borderRadius = null
+      if (!this.isAudited) {
+        id = 'Task_0ho18x0'
+      } else {
+        id = 'Task_1ymuvem'
+      }
+      const shape = this.elementRegistry.get(id)
+      if (shape.type.includes('Task')) {
+        borderRadius = '10px'
+      }
+      const $overlayHtml = $('<div class="highlight-overlay">')
+        .css({width: shape.width, height: shape.height, 'border-radius': borderRadius})
+      this.overlays.add(id, { // 这里应该可以等添加事件的时候再触发
+        position: {
+          top: 0,
+          left: 0
+        },
+        html: $overlayHtml
+      })
+      let element = window.document.getElementById(id)
+      console.log(element)
+      this.isAudited = 1
+    }
   },
   mounted () {
     // 获取到属性ref为“content”的dom节点
@@ -149,5 +191,11 @@ export default {
 </script>
 
 <style scoped>
-
+.group {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+  margin: 15px;
+}
 </style>
