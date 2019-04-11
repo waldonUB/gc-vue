@@ -136,7 +136,6 @@ export default {
       })
     },
     audit () {
-      debugger
       let id = null
       let borderRadius = null
       if (!this.isAudited) {

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {MP} from '../../../../config/map'
+import {MP} from '@/../config/map'
 import axios from 'axios'
 
 export default {

@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container id="userContainer">
     <el-table tooltip-effect="light" max-height="524" ref="multipleTable" :data="tableData">
       <el-table-column label="序号" width="50" align="center" type="index"></el-table-column>
       <el-table-column prop="userId" show-overflow-tooltip  label="用户ID" align="center"></el-table-column>
@@ -44,8 +44,30 @@ export default {
       })
     }
   },
-  mounted () {
+  created () {
     this.getUserList()
+    this.$nextTick(function () { // 测试异步操作
+      var userContainer = document.getElementById('userContainer')
+      console.log(userContainer)
+    })
+    setTimeout(function () {
+    }, 0)
+  },
+  beforeMount () {
+    console.log(this.$el)
+    console.log(this.$data)
+  },
+  mounted () {
+    console.log(this.$el)
+    console.log(this.$data)
+  },
+  beforeUpdate () {
+    console.log(this.$el)
+    console.log(this.$data)
+  },
+  updated () {
+    console.log(this.$el)
+    console.log(this.$data)
   }
 }
 </script>
