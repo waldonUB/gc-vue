@@ -1,4 +1,4 @@
-export function MP(ak) {
+function MP(ak) {
   return new Promise(function (resolve, reject) {
     window.init = function () {
       resolve(BMap)
@@ -10,3 +10,4 @@ export function MP(ak) {
     document.head.appendChild(script);
   })
 }
+export {MP}
