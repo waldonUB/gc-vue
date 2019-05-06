@@ -13,11 +13,14 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "border.css": "^0.10.0",
     "bpmn-js": "^3.3.0",
     "bpmn-js-properties-panel": "^0.29.0",
     "camunda-bpmn-moddle": "^3.2.0",
     "element-ui": "^2.4.8",
+    "fastclick": "^1.0.6",
     "font-awesome": "^4.7.0",
+    "normalize.css": "^8.0.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",

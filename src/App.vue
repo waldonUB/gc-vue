@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!--router-view显示的是当前路由地址所对应的内容-->
     <router-view/>
   </div>
 </template>
@@ -11,5 +12,5 @@ export default {
 </script>
 
 <style>
-  @import "./style/common.less";
+  @import "assets/style/common.less";
 </style>

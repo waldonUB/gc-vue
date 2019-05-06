@@ -29,7 +29,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-button type="success" icon="fa fa-fw fa-wechat" circle></el-button>
+          <el-button type="success" icon="fa fa-fw fa-wechat" circle @click="intoTravel"></el-button>
           <el-button type="primary" icon="fa fa-fw fa-qq" circle></el-button>
         </el-col>
       </el-row>
@@ -193,6 +193,12 @@ export default {
           vm.$message(`密码不一致`)
         }
       })
+    },
+    /**
+     * 跳转到travel
+     * */
+    intoTravel () {
+      this.$router.push({path: 'home'})
     }
   }
 }

@@ -4,6 +4,8 @@ import Login from '@/components/Login'
 import Manager from '@/components/Manager'
 import manager from '@/router/manager' // 子路由
 import Page404 from '@/components/system/Page404'
+import Home from '@/pages/Home'
+import travel from '@/router/travel'
 
 Vue.use(Router)
 
@@ -23,6 +25,11 @@ const appRouter = new Router({
       path: '/Page404',
       name: 'Page404',
       component: Page404
+    },
+    {
+      path: '/home/',
+      component: Home,
+      children: travel
     }
   ]
 })

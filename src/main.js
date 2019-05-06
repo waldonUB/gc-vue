@@ -15,6 +15,10 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css'
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css'
+import 'normalize.css'
+import 'border.css'
+import fastClick from 'fastclick'
+fastClick.attach(document.body)
 Vue.use(ElementUI)
 Vue.use(Vuex)
 
@@ -25,6 +29,7 @@ axios.defaults.baseURL = apiConfig.baseURI
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  // 相当于router: router
   router,
   store,
   components: { App },
